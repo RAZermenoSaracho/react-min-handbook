@@ -1,0 +1,73 @@
+import { NavLink } from "react-router-dom"
+
+type SidebarProps = {
+    isOpen: boolean
+    onClose: () => void
+}
+
+const links = [
+    { to: "/", label: "Home" },
+    { to: "/jsx", label: "JSX & Rendering" },
+    { to: "/state", label: "useState" },
+    { to: "/props", label: "Props & Children" },
+    { to: "/prop-drilling", label: "Prop Drilling" },
+    { to: "/context", label: "Context API" },
+    { to: "/use-effect", label: "useEffect" },
+    { to: "/data-fetching", label: "Fetching & WebSockets" },
+]
+
+export default function Sidebar({ isOpen, onClose }: SidebarProps) {
+    return (
+        <>
+            {/* Overlay (mobile only) */}
+            {isOpen && (
+                <div
+                    className="fixed inset-0 bg-black/50 z-40 md:hidden"
+                    onClick={onClose}
+                />
+            )}
+
+            <aside
+                className={`
+          fixed z-50 inset-y-0 left-0 w-64 bg-neutral-950 border-r border-neutral-800
+          transform transition-transform
+          ${isOpen ? "translate-x-0" : "-translate-x-full"}
+          md:static md:translate-x-0
+        `}
+            >
+                <div className="p-4 flex items-center justify-between md:block">
+                    <h2 className="text-lg font-semibold">
+                        React Handbook
+                    </h2>
+
+                    {/* Close button (mobile only) */}
+                    <button
+                        onClick={onClose}
+                        className="md:hidden text-neutral-400 hover:text-white"
+                        aria-label="Close sidebar"
+                    >
+                        ✕
+                    </button>
+                </div>
+
+                <nav className="space-y-1 px-2">
+                    {links.map(link => (
+                        <NavLink
+                            key={link.to}
+                            to={link.to}
+                            onClick={onClose}
+                            className={({ isActive }) =>
+                                `block rounded px-3 py-2 text-sm ${isActive
+                                    ? "bg-neutral-800 text-white"
+                                    : "text-neutral-400 hover:text-white hover:bg-neutral-900"
+                                }`
+                            }
+                        >
+                            {link.label}
+                        </NavLink>
+                    ))}
+                </nav>
+            </aside>
+        </>
+    )
+}
