@@ -5,21 +5,53 @@ type SidebarProps = {
     onClose: () => void
 }
 
-const links = [
-    { to: "/", label: "Home" },
-    { to: "/jsx", label: "JSX & Rendering" },
-    { to: "/state", label: "useState" },
-    { to: "/props", label: "Props & Children" },
-    { to: "/prop-drilling", label: "Prop Drilling" },
-    { to: "/context", label: "Context API" },
-    { to: "/use-effect", label: "useEffect" },
-    { to: "/data-fetching", label: "Fetching & WebSockets" },
+const sections = [
+    {
+        title: "Fundamentals",
+        links: [
+            { to: "/", label: "Home" },
+            { to: "/jsx", label: "JSX & Rendering" },
+        ],
+    },
+    {
+        title: "Components & Data Flow",
+        links: [
+            { to: "/props", label: "Props & Children" },
+            { to: "/state", label: "useState" },
+        ],
+    },
+    {
+        title: "Hooks (Core)",
+        links: [
+            { to: "/use-effect", label: "useEffect" },
+            { to: "/use-context", label: "useContext" },
+        ],
+    },
+    {
+        title: "Hooks (Advanced & Performance)",
+        links: [
+            { to: "/use-ref", label: "useRef" },
+            { to: "/use-memo", label: "useMemo" },
+        ],
+    },
+    {
+        title: "State Architecture",
+        links: [
+            { to: "/prop-drilling", label: "Prop Drilling" },
+            { to: "/context", label: "Context API" },
+        ],
+    },
+    {
+        title: "Data & Side Effects",
+        links: [
+            { to: "/data-fetching", label: "Fetching & WebSockets" },
+        ],
+    },
 ]
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     return (
         <>
-            {/* Overlay (mobile only) */}
             {isOpen && (
                 <div
                     className="fixed inset-0 bg-black/50 z-40 md:hidden"
@@ -40,7 +72,6 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                         React Handbook
                     </h2>
 
-                    {/* Close button (mobile only) */}
                     <button
                         onClick={onClose}
                         className="md:hidden text-neutral-400 hover:text-white"
@@ -50,21 +81,31 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                     </button>
                 </div>
 
-                <nav className="space-y-1 px-2">
-                    {links.map(link => (
-                        <NavLink
-                            key={link.to}
-                            to={link.to}
-                            onClick={onClose}
-                            className={({ isActive }) =>
-                                `block rounded px-3 py-2 text-sm ${isActive
-                                    ? "bg-neutral-800 text-white"
-                                    : "text-neutral-400 hover:text-white hover:bg-neutral-900"
-                                }`
-                            }
-                        >
-                            {link.label}
-                        </NavLink>
+                <nav className="px-2 space-y-6">
+                    {sections.map(section => (
+                        <div key={section.title}>
+                            <p className="px-3 mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                                {section.title}
+                            </p>
+
+                            <div className="space-y-1">
+                                {section.links.map(link => (
+                                    <NavLink
+                                        key={link.to}
+                                        to={link.to}
+                                        onClick={onClose}
+                                        className={({ isActive }) =>
+                                            `block rounded px-3 py-2 text-sm ${isActive
+                                                ? "bg-neutral-800 text-white"
+                                                : "text-neutral-400 hover:text-white hover:bg-neutral-900"
+                                            }`
+                                        }
+                                    >
+                                        {link.label}
+                                    </NavLink>
+                                ))}
+                            </div>
+                        </div>
                     ))}
                 </nav>
             </aside>

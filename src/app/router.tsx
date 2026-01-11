@@ -8,6 +8,9 @@ import PropDrillingExample from "../pages/context/PropDrillingExample"
 import ContextExample from "../pages/context/ContextExample"
 import UseEffect from "../pages/effects/UseEffect"
 import DataFetching from "../pages/effects/DataFetching"
+import UseRef from "../pages/hooks/UseRef"
+import UseMemo from "../pages/hooks/UseMemo"
+import UseContext from "../pages/hooks/UseContext"
 
 export const router = createBrowserRouter([
     {
@@ -21,6 +24,9 @@ export const router = createBrowserRouter([
             { path: "/context", element: <ContextExample />, },
             { path: "/use-effect", element: <UseEffect /> },
             { path: "/data-fetching", element: <DataFetching /> },
+            { path: "/use-ref", element: <UseRef /> },
+            { path: "/use-memo", element: <UseMemo /> },
+            { path: "/use-context", element: <UseContext /> },
         ],
     },
 ])
