@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react"
 
-type CoinGeckoResponse = {
-    bitcoin: {
-        usd: number
-    }
+type BinanceTickerResponse = {
+    symbol: string
+    price: string
+}
+
+type BinanceTradeMessage = {
+    p: string // price
 }
 
 export default function DataFetching() {
@@ -25,7 +28,7 @@ export default function DataFetching() {
                 setError(null)
 
                 const response = await fetch(
-                    "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd",
+                    "https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT",
                     { signal: controller.signal }
                 )
 
@@ -33,8 +36,8 @@ export default function DataFetching() {
                     throw new Error("Failed to fetch price")
                 }
 
-                const data: CoinGeckoResponse = await response.json()
-                setPrice(data.bitcoin.usd.toString())
+                const data: BinanceTickerResponse = await response.json()
+                setPrice(data.price)
             } catch (err) {
                 if (err instanceof Error && err.name !== "AbortError") {
                     setError(err.message)
@@ -59,7 +62,7 @@ export default function DataFetching() {
         )
 
         socket.onmessage = event => {
-            const data = JSON.parse(event.data)
+            const data: BinanceTradeMessage = JSON.parse(event.data)
             setLivePrice(data.p)
         }
 
@@ -81,7 +84,8 @@ export default function DataFetching() {
 
             <p className="text-neutral-400">
                 This page demonstrates two different ways of synchronizing React
-                with external data using <code className="text-neutral-300">useEffect</code>.
+                with external data using{" "}
+                <code className="text-neutral-300">useEffect</code>.
             </p>
 
             {/* ================= NETWORK BEHAVIOR NOTE ================= */}
@@ -91,14 +95,15 @@ export default function DataFetching() {
                 </h2>
 
                 <p className="text-sm text-neutral-300">
-                    External APIs and WebSocket connections depend on network conditions.
-                    Errors shown in the browser console do not always indicate broken React
-                    logic.
+                    External APIs and WebSocket connections depend on network
+                    conditions. Errors shown in the browser console do not always
+                    indicate broken React logic.
                 </p>
 
                 <p className="text-sm text-neutral-300">
-                    Firewalls, DNS resolution, VPNs, corporate networks, or React Strict Mode
-                    can cause warnings even when data continues to flow correctly.
+                    Firewalls, DNS resolution, VPNs, corporate networks, or React
+                    Strict Mode can cause warnings even when data continues to
+                    flow correctly.
                 </p>
             </section>
 
@@ -110,7 +115,8 @@ export default function DataFetching() {
 
                 <p className="text-neutral-400">
                     Fetching data uses a request-response model. The effect runs
-                    once, requests data, and updates state when the response arrives.
+                    once, requests data, and updates state when the response
+                    arrives.
                 </p>
 
                 {/* CODE */}
@@ -124,7 +130,7 @@ export default function DataFetching() {
       signal: controller.signal
     })
     const data = await response.json()
-    setPrice(data)
+    setPrice(data.price)
   }
 
   fetchPrice()
@@ -186,70 +192,35 @@ export default function DataFetching() {
                 </div>
 
                 <p className="text-sm text-neutral-500">
-                    Note: HTTP requests may fail due to DNS issues, API downtime, or network
-                    restrictions. This does not indicate a problem with{" "}
+                    Note: HTTP requests may fail due to DNS issues, API downtime,
+                    or network restrictions. This does not indicate a problem
+                    with{" "}
                     <code className="text-neutral-300">useEffect</code>.
                 </p>
-
             </section>
 
-            <section className="space-y-2 rounded border border-neutral-800 bg-neutral-900/40 p-4">
-                <h3 className="text-sm font-semibold text-neutral-200">
-                    Why do WebSocket errors appear even when data updates?
-                </h3>
+            {/* ================= DATA SOURCES ================= */}
+            <section className="space-y-2">
+                <h2 className="text-xl font-semibold">
+                    Data sources
+                </h2>
 
-                <ul className="list-disc list-inside text-sm text-neutral-400 space-y-1">
+                <ul className="list-disc list-inside text-neutral-400 space-y-1">
                     <li>
-                        WebSocket servers may reject or close connections during the initial
-                        handshake.
+                        <strong>HTTP (Pull):</strong>{" "}
+                        Binance public REST API — ticker price endpoint.
                     </li>
                     <li>
-                        Some networks block <code className="text-neutral-300">wss://</code>{" "}
-                        traffic.
-                    </li>
-                    <li>
-                        Browser WebSocket errors are generic and do not always mean failure.
-                    </li>
-                    <li>
-                        In development mode, React Strict Mode intentionally mounts and unmounts
-                        components twice.
+                        <strong>WebSocket (Push):</strong>{" "}
+                        Binance public WebSocket trade stream.
                     </li>
                 </ul>
 
-                <p className="text-sm text-neutral-400">
-                    If live data continues to update, the connection is working despite the
-                    warning.
-                </p>
-            </section>
-
-            <section className="space-y-2">
-                <h3 className="text-sm font-semibold text-neutral-300">
-                    React Strict Mode (development only)
-                </h3>
-
-                <pre className="rounded bg-neutral-900 p-3 text-xs text-neutral-400 overflow-x-auto">
-                    <code>
-                        {`<React.StrictMode>
-  <App />
-</React.StrictMode>`}
-                    </code>
-                </pre>
-
-                <p className="text-sm text-neutral-400">
-                    In development, React intentionally runs effects twice to detect
-                    side effects. This can cause WebSocket connections to open and close
-                    immediately, producing console warnings.
-                </p>
-
                 <p className="text-sm text-neutral-500">
-                    This behavior does not occur in production builds.
+                    These are public, unauthenticated endpoints intended for
+                    educational and experimental use. Availability may vary due
+                    to network conditions or rate limits.
                 </p>
-
-                <p className="text-sm text-neutral-500">
-                    Console warnings are not always bugs. Always validate behavior by
-                    observing UI updates and data flow.
-                </p>
-
             </section>
 
             {/* ================= SUMMARY ================= */}
@@ -260,13 +231,16 @@ export default function DataFetching() {
 
                 <ul className="list-disc list-inside text-neutral-400 space-y-1">
                     <li>
-                        Fetch uses a <strong>pull</strong> model (request-response).
+                        Fetch uses a <strong>pull</strong> model
+                        (request-response).
                     </li>
                     <li>
-                        WebSocket uses a <strong>push</strong> model (live updates).
+                        WebSocket uses a <strong>push</strong> model
+                        (live updates).
                     </li>
                     <li>
-                        Both rely on <code className="text-neutral-300">useEffect</code>
+                        Both rely on{" "}
+                        <code className="text-neutral-300">useEffect</code>{" "}
                         for lifecycle management.
                     </li>
                     <li>
