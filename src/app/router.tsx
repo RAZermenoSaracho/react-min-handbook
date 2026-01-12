@@ -11,6 +11,9 @@ import DataFetching from "../pages/effects/DataFetching"
 import UseRef from "../pages/hooks/UseRef"
 import UseMemo from "../pages/hooks/UseMemo"
 import UseContext from "../pages/hooks/UseContext"
+import ReduxIntro from "../pages/redux/ReduxIntro"
+import ReduxStore from "../pages/redux/ReduxStore"
+import ReduxVsContext from "../pages/redux/ReduxVsContext"
 
 export const router = createBrowserRouter([
     {
@@ -27,6 +30,19 @@ export const router = createBrowserRouter([
             { path: "/use-ref", element: <UseRef /> },
             { path: "/use-memo", element: <UseMemo /> },
             { path: "/use-context", element: <UseContext /> },
+            {
+                path: "/redux",
+                element: <ReduxIntro />,
+            },
+            {
+                path: "/redux/store",
+                element: <ReduxStore />,
+            },
+            {
+                path: "/redux/vs-context",
+                element: <ReduxVsContext />,
+            },
+
         ],
     },
 ])

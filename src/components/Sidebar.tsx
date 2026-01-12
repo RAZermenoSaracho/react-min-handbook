@@ -47,6 +47,14 @@ const sections = [
             { to: "/data-fetching", label: "Fetching & WebSockets" },
         ],
     },
+    {
+        title: "Redux",
+        links: [
+            { to: "/redux", label: "Redux (Intro)" },
+            { to: "/redux/store", label: "Redux Store" },
+            { to: "/redux/vs-context", label: "Redux vs Context" },
+        ]
+    }
 ]
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
